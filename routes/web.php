@@ -25,7 +25,7 @@ Route::get('/', function (Request $request) {
         return redirect()->route('exercises.index');
     }
     return redirect()->route('login');
-});
+})->name('index');
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login-auth');
@@ -87,4 +87,6 @@ Route::prefix('quiz')->name('quizzes.')->group(function(){
     Route::get('/delete/{id}', [QuizController::class, 'delete'])->name('delete');
 
     Route::get('/download/{id}', [QuizController::class, 'download'])->name('download');
+
+    Route::post('/answer', [QuizController::class, 'answer'])->name('answer');
 });

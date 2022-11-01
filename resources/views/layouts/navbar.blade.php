@@ -2,7 +2,7 @@
         <div class="container">
             <nav class="navbar navbar-expand-lg main-nav px-0">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="../exercise">TrietEdu</a>
+                    <a class="navbar-brand" href="{{ URL::route('index') }}">TrietEdu</a>
                     <div id="mainMenu">
                         <ul class="navbar-nav ml-auto text-uppercase f1">
                             <li>

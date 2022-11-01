@@ -20,9 +20,11 @@
                     <a href="{{ URL::route('quizzes.get-add') }}" class="btn btn-outline-success">Tạo câu đố mới</a>
                 </div>
                 @endcan
-                @empty($quizzes)
+                @if($quizzes->count() === 0)
                 <p>Hiện tại không có câu đố nào</p>
-                @endempty
+                @else
+                <p>Có {{ $quizzes->count() }} câu đố</p>
+                @endif
                 @foreach($quizzes as $quiz)
                 @php $creator = App\Models\User::select('fullname')->where('id', '=', $quiz->creator_id)->first(); @endphp
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-5">

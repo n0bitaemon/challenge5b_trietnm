@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Quiz;
+use App\Models\QuizAnswer;
 use App\Models\User;
 
 class QuizController extends Controller
@@ -39,7 +40,7 @@ class QuizController extends Controller
         if($request->user()->cannot('access', Quiz::class)){
             abort(404);
         }
-        $validator = $request->validate([
+        $request->validate([
             'title' => ['required', 'max:255'],
             'file' => ['required', File::types(['txt']), function($attribute, $value, $fail) use ($request){
                 $uploadFileName = pathinfo($request->file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -58,6 +59,7 @@ class QuizController extends Controller
         $quiz = new Quiz;
         $quiz->title = $request->title;
         $quiz->description = $request->description;
+        $quiz->hint = $request->hint;
         $quiz->file = $storeFileName;
         $quiz->creator_id = $request->user()->id;
         $quiz->start_time = $request->start_time;
@@ -83,7 +85,7 @@ class QuizController extends Controller
             abort(404);
         }
 
-        $validator = $request->validate([
+        $request->validate([
             'title' => ['required', 'max:255'],
             'file' => [File::types(['txt']), function($attribute, $value, $fail) use ($request){
                 $uploadFileName = pathinfo($request->file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -109,6 +111,7 @@ class QuizController extends Controller
 
         $quiz->title = $request->title;
         $quiz->description = $request->description;
+        $quiz->hint = $request->hint;
         $quiz->start_time = $request->start_time;
         $quiz->end_time = $request->end_time;
         $quiz->is_published = $request->is_published === 'on' ? 1 : 0;
@@ -131,6 +134,27 @@ class QuizController extends Controller
 
     public function download($id){
         $quiz = Quiz::find($id);
-        return Storage::download('private/quizzes/'.$quiz->file);
+        return Storage::download($quiz->getFilePath());
+    }
+
+    public function answer(Request $request){
+        $quiz = Quiz::find($request->quiz_id);
+        if($request->user()->cannot('answer', $quiz)){
+            abort(403);
+        }
+
+        $request->validate([
+            'answer' => ['required', 'max:255'],
+            'quiz_id' => ['required']
+        ]);
+
+        $quizAnswer = new QuizAnswer;
+        $quizAnswer->quiz_id = $request->quiz_id;
+        $quizAnswer->user_id = $request->user()->id;
+        $quizAnswer->answer = $request->answer;
+
+        $quizAnswer->save();
+
+        return redirect()->route('quizzes.detail', ['id'=>$request->quiz_id]);
     }
 }

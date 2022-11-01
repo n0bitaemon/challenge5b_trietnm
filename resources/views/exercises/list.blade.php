@@ -19,9 +19,11 @@
                     <a href="{{ URL::route('exercises.get-add') }}" class="btn btn-outline-success">Tạo bài tập mới</a>
                 </div>
                 @endcan
-                @empty($exercises)
+                @if($exercises->count() === 0)
                 <p>Hiện tại không có bài tập nào</p>
-                @endempty
+                @else
+                <p>Có {{ $exercises->count() }} bài tập</p>
+                @endif
                 @foreach ($exercises as $exercise)
                 @php
                 $creator = App\Models\User::select('fullname')->where('id', '=', $exercise->creator_id)->first();

@@ -23,7 +23,7 @@ class ExerciseController extends Controller
 
     public function detail($id){
         $exercise = Exercise::find($id);
-        $creator = User::where('id', '=', $exercise->creator_id)->first();
+        $creator = User::find($exercise->creator_id);
 
         return view('exercises.detail', ['exercise'=>$exercise, 'creator'=>$creator]);
     }

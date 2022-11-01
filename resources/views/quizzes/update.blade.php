@@ -36,10 +36,10 @@
                             <label for="quizFile" class="form-label">Chọn file khác</label>
                             <input name="file" type="file" class="form-control mb-2" id="quizFile" accept="text/plain">
                             @error('file') <p class="text-danger validate-err">{{ $message }}</p> @enderror
-                            <p class="d-inline">File hiện tại: </p>
+                            <p class="d-inline">File hiện tại (đáp án là tên file): </p>
                             <div class="card mt-2 d-inline-block">
                                 <div class="card-body p-0">
-                                    <a class="d-block p-2 text-center" href="{{ URL::route('quizzes.download', ['id'=>$quiz->id]) }}">{{ $quiz->getFileWithoutTimestamp() }}</a>
+                                    <a class="d-block p-2 text-center" href="{{ URL::route('quizzes.download', ['id'=>$quiz->id]) }}">{{ $quiz->getFileName() }}</a>
                                 </div>
                             </div>
                         </div>
@@ -47,7 +47,6 @@
                             <label for="quizStartTime" class="form-label">Ngày bắt đầu</label>
                             <input name="start_time" type="datetime-local" value="{{ old('file', $quiz->start_time) }}" id="quizStartTime" class="form-control">
                             @error('start_time') <p class="text-danger validate-err">{{ $message }}</p> @enderror
-                        </div>
                         </div>
                         <div class="mb-3">
                             <label for="quizEndTime" class="form-label">Ngày hết hạn</label>

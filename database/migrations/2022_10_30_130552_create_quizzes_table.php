@@ -17,6 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('title', 255)->nullable(false);
             $table->tinyText('description')->nullable();
+            $table->tinyText('hint')->nullabel(false);
             $table->string('file', 255)->nullable(false);
             $table->unsignedInteger('creator_id')->nullable(false);
             $table->datetime('start_time')->useCurrent();

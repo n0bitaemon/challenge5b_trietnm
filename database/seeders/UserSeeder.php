@@ -19,13 +19,15 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'username' => 'teacher1',
             'password' => Hash::make('123456a@A'),
-            'fullname' => 'Teacher Number One'
+            'fullname' => 'Teacher Number One',
+            'is_teacher' => 1
         ]);
 
         DB::table('users')->insert([
             'username' => 'teacher2',
             'password' => Hash::make('123456a@A'),
-            'fullname' => 'Teacher Number Two'
+            'fullname' => 'Teacher Number Two',
+            'is_teacher' => 1
         ]);
 
         DB::table('users')->insert([

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('quiz_id')->nullable(false);
             $table->unsignedInteger('user_id')->nullable(false);
             $table->string('answer', 255)->nullable(false);
-            $table->time('answer_time')->useCurrent();
+            $table->datetime('answer_time')->useCurrent();
             $table->timestamps();
 
             $table->foreign('quiz_id')->references('id')->on('quizzes');
