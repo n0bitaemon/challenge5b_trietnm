@@ -24,14 +24,12 @@ class AuthController extends Controller
         ]);
 
         if(Auth::attempt($credentials)){
-            $userSession = Auth::user();
-
-            return redirect()->route('users.index');
+            return redirect()->route('exercises.index');
         }
 
         return back()->withErrors([
             'wrong_credentials' => 'Wrong username or password'
-        ]);
+        ])->withInput();
     }
 
     public function logout(){

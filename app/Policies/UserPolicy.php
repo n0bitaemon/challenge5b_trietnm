@@ -43,4 +43,9 @@ class UserPolicy
     public function ignorePassword(User $userSession, User $userUpdate){
         return $userSession->is_teacher && !$userUpdate->is_teacher;
     }
+    
+    public function send(User $userSession, User $userMessage){
+        return $userSession->id !== $userMessage->id;
+    }
+
 }

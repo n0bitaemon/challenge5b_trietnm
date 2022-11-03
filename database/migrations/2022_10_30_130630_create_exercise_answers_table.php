@@ -18,7 +18,8 @@ return new class extends Migration
             $table->unsignedInteger('exercise_id')->nullable(false);
             $table->unsignedInteger('user_id')->nullable(false);
             $table->string('answer_file', 255)->nullable();
-            $table->time('answer_time')->useCurent();
+            $table->datetime('answer_time')->useCurrent();
+            $table->boolean('is_done')->nullable(false)->default(0);
             $table->timestamps();
 
             $table->foreign('exercise_id')->references('id')->on('exercises');

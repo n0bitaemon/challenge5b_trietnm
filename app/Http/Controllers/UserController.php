@@ -9,6 +9,7 @@ use Illuminate\Validation\Rules\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Message;
 
 class UserController extends Controller
 {
@@ -26,6 +27,9 @@ class UserController extends Controller
             $user = $request->user();
         }else{
             $user = User::find($id);
+            if($user === null){
+                abort(404);
+            }
         }
 
         return view('users.profile', ['user'=>$user]);
@@ -66,6 +70,9 @@ class UserController extends Controller
     public function getUpdate(Request $request, $id = null){
         if($id !== null){
             $user = User::find($id);
+            if($user === null){
+                abort(404);
+            }
         }else{
             $user = $request->user();
         }
@@ -80,6 +87,9 @@ class UserController extends Controller
 
     public function postUpdate(Request $request){
         $user = User::find($request->id);
+        if($user === null){
+            abort(404);
+        }
         if($request->user()->cannot('update', $user)){
             abort(404);
         }
@@ -123,6 +133,9 @@ class UserController extends Controller
     public function getPassword(Request $request, $id = null){
         if($id !== null){
             $user = User::find($id);
+            if($user === null){
+                abort(404);
+            }
         }else{
             $user = $request->user();
         }
@@ -136,6 +149,9 @@ class UserController extends Controller
 
     public function postPassword(Request $request){
         $user = User::find($request->id);
+        if($user === null){
+            abort(404);
+        }
         if($request->user()->cannot('update', $user)){
             abort(403);
         }
@@ -159,6 +175,9 @@ class UserController extends Controller
 
     public function delete(Request $request, $id){
         $user = User::find($id);
+        if($user === 0){
+            abort(404);
+        }
         if($request->user()->cannot('delete', $user)){
             abort(404);
         }

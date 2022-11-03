@@ -26,7 +26,7 @@
                                 <ul class="dropdown-menu">
                                   <li><a class="dropdown-item" href="{{ URL::route('users.profile') }}">Thông tin cá nhân</a></li>
                                   <li><a class="dropdown-item" href="{{ URL::route('users.get-update') }}">Cập nhật hồ sơ</a></li>
-                                  <li><a class="dropdown-item" href="{{ URL::route('users.messages') }}">Tin nhắn</a></li>
+                                  <li><a class="dropdown-item" href="{{ URL::route('users.messages.get') }}">Tin nhắn</a></li>
                                   <li><hr class="dropdown-divider"></li>
                                   <li><a class="dropdown-item" href="{{ URL::route('logout') }}">Đăng xuất</a></li>
                                 </ul>

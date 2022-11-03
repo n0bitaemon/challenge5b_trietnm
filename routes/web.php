@@ -8,6 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ExerciseAnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +52,15 @@ Route::prefix('user')->name('users.')->group(function(){
 
     Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete');
 
-    Route::get('/messages', [UserController::class, 'messages'])->name('messages');
+    Route::prefix('message')->name('messages.')->group(function(){
+        Route::get('/', [MessageController::class, 'get'])->name('get');
+
+        Route::post('/', [MessageController::class, 'send'])->name('send');
+
+        Route::post('/update', [MessageController::class, 'update'])->name('update');
+
+        Route::post('/delete', [MessageController::class, 'delete'])->name('delete');
+    });
 });
 
 Route::prefix('exercise')->name('exercises.')->group(function(){
@@ -69,6 +79,14 @@ Route::prefix('exercise')->name('exercises.')->group(function(){
     Route::get('/delete/{id}', [ExerciseController::class, 'delete'])->name('delete');
 
     Route::get('/download/{id}', [ExerciseController::class, 'download'])->name('download');
+
+    Route::prefix('answer')->name('answers.')->group(function(){
+        Route::post('/save', [ExerciseAnswerController::class, 'save'])->name('save');
+
+        Route::get('/cancle/{id}', [ExerciseAnswerController::class, 'cancle'])->name('cancle');
+
+        Route::get('/download/{id}', [ExerciseAnswerController::class, 'download'])->name('download');
+    });
 });
 
 Route::prefix('quiz')->name('quizzes.')->group(function(){

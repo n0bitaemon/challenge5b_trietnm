@@ -26,12 +26,34 @@
                 <p>Có {{ $quizzes->count() }} câu đố</p>
                 @endif
                 @foreach($quizzes as $quiz)
-                @php $creator = App\Models\User::select('fullname')->where('id', '=', $quiz->creator_id)->first(); @endphp
+                @php 
+                $creator = App\Models\User::select('fullname')->where('id', '=', $quiz->creator_id)->first();
+                $is_teacher = Request::user()->is_teacher;
+                if($is_teacher === 0){
+                    $is_answered = false;
+                    $quizAnswer = App\Models\QuizAnswer::select('answer')
+                        ->where([
+                            ['user_id', '=', Request::user()->id],
+                            ['quiz_id', '=', $quiz->id]
+                        ])->first();
+                    if($quizAnswer) $is_answered = true;
+                }
+                @endphp
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-5">
-                    <div class="card done">
+                    <div class="card @if(!$is_teacher && $is_answered) done @endif">
                         <div class="card-header d-flex justify-content-between">
                             <p>{{ $quiz->title }}</p>
-                            <p class="text-success">Đã giao</p>
+                            @php
+                            if($is_teacher){
+                                echo '<p class="fw-bold '.($quiz->is_published ? 'text-success">Đã giao' : 'text-danger">Chưa giao').'</p>';
+                            }else{
+                                if(!$is_answered){
+                                    echo '<p class="fw-bold text-danger">Chưa làm</p>';
+                                }else{
+                                    echo '<p class="fw-bold text-success">Hoàn thành</p>';
+                                }
+                            }
+                            @endphp
                         </div>
                         <div class="card-body">
                             <div class="row">

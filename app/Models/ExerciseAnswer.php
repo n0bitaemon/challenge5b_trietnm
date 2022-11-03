@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExerciseAnswer extends Model
 {
-    use HasFactory;
+    public function getFileWithoutTimestamp(){
+        return substr($this->answer_file, strpos($this->answer_file, "_") + 1);
+    }
 }

@@ -35,7 +35,7 @@
                                     echo '<p class="fw-bold '.($quiz->is_published ? 'text-success">Đã giao' : 'text-danger">Chưa giao').'</p>';
                                 }else{
                                     if(!$is_answered){
-                                        echo '<p class="fw-bold text-danger">Chưa trả lời</p>';
+                                        echo '<p class="fw-bold text-primary">Chưa làm</p>';
                                     }else{
                                         echo '<p class="fw-bold '.($quizAnswer->answer === $quiz->getFileName(true) ? 'text-success">Trả lời đúng' : 'text-danger">Trả lời sai').'</p>';
                                     }
@@ -96,10 +96,44 @@
                             @endcan
                         </div>
                         @can('access', App\Models\Quiz::class)
+                        @php
+                        $answers = App\Models\QuizAnswer::where('quiz_id', $quiz->id)->get();
+                        $studentCount = App\Models\User::where('is_teacher' , '=', 0)->count();
+                        @endphp
                         <hr class="text-muted">
-                        <div class="col-12">
+                        <div class="col-12 mb-5">
                             <a href="{{ URL::route('quizzes.get-update', ['id'=>$quiz->id]) }}" class="btn btn-outline-primary">Chỉnh sửa</a>
                             <a onclick="setDeleteUrl('{{ URL::route('quizzes.delete', ['id'=>$quiz->id]) }}')" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Xóa</a>
+                        </div>
+                        <div class="col-7 mb-3">
+                            <a class="h3" href="#exerciseHistory" data-bs-toggle="collapse" role="button" aria-expanded="false"
+                                aria-controls="exerciseHistory">Lịch sử làm bài</a>
+                            <div class="collapse" id="exerciseHistory">
+                                <p><b>{{ $answers->count().' / '.$studentCount }}</b> học sinh đã hoàn thành</p>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Học sinh</th>
+                                            <th scope="col">Trả lời</th>
+                                            <th scope="col">Kết quả</th>
+                                            <th scope="col">Thời gian</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($answers as $answer)
+                                        @php $user = App\Models\User::where('id', '=', $answer->user_id)->first(['fullname']); @endphp
+                                        <tr>
+                                            <th scope="row">{{ $loop->index + 1 }}</th>
+                                            <td><a href="{{ URL::route('users.profile', ['id'=>$answer->user_id]) }}">{{ $user->fullname }}</a></td>
+                                            <td>{{ $answer->answer }}</td>
+                                            <td>@if($answer->answer === $quiz->getFileName(true)) <p class="text-success">Đúng</p> @else <p class="text-danger">Sai</p> @endif</td>
+                                            <td>{{ $answer->answer_time }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         @endcan
                     </div>

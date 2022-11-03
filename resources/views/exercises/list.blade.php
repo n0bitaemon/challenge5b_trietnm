@@ -25,14 +25,36 @@
                 <p>Có {{ $exercises->count() }} bài tập</p>
                 @endif
                 @foreach ($exercises as $exercise)
-                @php
+                @php 
                 $creator = App\Models\User::select('fullname')->where('id', '=', $exercise->creator_id)->first();
+                $is_teacher = Request::user()->is_teacher;
+                if($is_teacher === 0){
+                    $is_answered = false;
+                    $exerciseAnswer = App\Models\ExerciseAnswer::select('is_done')
+                        ->where([
+                            ['user_id', '=', Request::user()->id],
+                            ['exercise_id', '=', $exercise->id]
+                        ])->first();
+                    if($exerciseAnswer){
+                        if($exerciseAnswer->is_done === 1) $is_answered = true;
+                    }
+                }
                 @endphp
                 <div class="col-lg-4 col-md-6 col-sm-12 pb-5">
-                    <div class="card done">
+                    <div class="card @if(!$is_teacher && $is_answered) done @endif">
                         <div class="card-header d-flex justify-content-between">
                             <p class="m-0">{{ $exercise->title }}</p>
-                            <p class="text-success m-0">Đã giao</p>
+                            @php
+                            if($is_teacher){
+                                echo '<p class="fw-bold '.($exercise->is_published ? 'text-success">Đã giao' : 'text-danger">Chưa giao').'</p>';
+                            }else{
+                                if(!$is_answered){
+                                    echo '<p class="fw-bold text-danger">Chưa làm</p>';
+                                }else{
+                                    echo '<p class="fw-bold text-success">Hoàn thành</p>';
+                                }
+                            }
+                            @endphp
                         </div>
                         <div class="card-body">
                             <div class="row">

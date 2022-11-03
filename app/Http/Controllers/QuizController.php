@@ -23,6 +23,9 @@ class QuizController extends Controller
 
     public function detail($id){
         $quiz = Quiz::where('id', '=', $id)->first();
+        if($quiz === null){
+            abort(404);
+        }
         $creator = User::where('id', '=', $quiz->creator_id)->first();
 
         return view('quizzes.detail', ['quiz'=>$quiz, 'creator'=>$creator]);
@@ -77,10 +80,18 @@ class QuizController extends Controller
         }
 
         $quiz = Quiz::find($id);
+        if($quiz === null){
+            abort(404);
+        }
+
         return view('quizzes.update', ['quiz'=>$quiz]);
     }
 
     public function postUpdate(Request $request){
+        $quiz = Quiz::find($request->id);
+        if($quiz === null){
+            abort(404);
+        }
         if($request->user()->cannot('access', Quiz::class)){
             abort(404);
         }
@@ -97,7 +108,6 @@ class QuizController extends Controller
             'end_time' => ['required', 'date', 'after:start_time']
         ]);
 
-        $quiz = Quiz::find($request->id);
         if($request->hasFile('file')){
             //Delete old file
             Storage::delete('private/quizzes/'.$request->file);
@@ -123,6 +133,9 @@ class QuizController extends Controller
 
     public function delete(Request $request, $id){
         $quiz = Quiz::find($id);
+        if($quiz === null){
+            abort(404);
+        }
         if($request->user()->cannot('access', Quiz::class)){
             abort(404);
         }
@@ -134,11 +147,17 @@ class QuizController extends Controller
 
     public function download($id){
         $quiz = Quiz::find($id);
+        if($quiz === null){
+            abort(404);
+        }
         return Storage::download($quiz->getFilePath());
     }
 
     public function answer(Request $request){
         $quiz = Quiz::find($request->quiz_id);
+        if($quiz === null){
+            abort(404);
+        }
         if($request->user()->cannot('answer', $quiz)){
             abort(403);
         }

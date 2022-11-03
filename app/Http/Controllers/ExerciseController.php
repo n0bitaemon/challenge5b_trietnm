@@ -23,6 +23,9 @@ class ExerciseController extends Controller
 
     public function detail($id){
         $exercise = Exercise::find($id);
+        if($exercise === null){
+            abort(404);
+        }
         $creator = User::find($exercise->creator_id);
 
         return view('exercises.detail', ['exercise'=>$exercise, 'creator'=>$creator]);
@@ -47,13 +50,13 @@ class ExerciseController extends Controller
         ]);
 
         $uploadFileName = $request->file->getClientOriginalName();
-        $storeFileName = floor(microtime(true) * 10000).'_'.$uploadFileName;
-        $request->file->storeAs('private/exercises', $storeFileName);
+        $storedFileName = floor(microtime(true) * 10000).'_'.$uploadFileName;
+        $request->file->storeAs('private/exercises', $storedFileName);
 
         $exercise = new Exercise;
         $exercise->title = $request->title;
         $exercise->description = $request->description;
-        $exercise->file = $storeFileName;
+        $exercise->file = $storedFileName;
         $exercise->creator_id = $request->user()->id;
         $exercise->start_time = $request->start_time;
         $exercise->end_time = $request->end_time;
@@ -65,15 +68,22 @@ class ExerciseController extends Controller
     }
 
     public function getUpdate(Request $request, $id){
+        $exercise = Exercise::find($id);
+        if($exercise === null){
+            abort(404);
+        }
         if($request->user()->cannot('access', Exercise::class)){
             abort(404);
         }
-        $exercise = Exercise::find($id);
 
         return view('exercises.update', ['exercise'=>$exercise]);
     }
 
     public function postUpdate(Request $request){
+        $exercise = Exercise::find($request->id);
+        if($exercise === null){
+            abort(404);
+        }
         if($request->user()->cannot('access', Exercise::class)){
             abort(404);
         }
@@ -84,10 +94,9 @@ class ExerciseController extends Controller
             'end_time' => ['required', 'date', 'after:start_time']
         ]);
 
-        $exercise = Exercise::find($request->id);
         if($request->hasFile('file')){
             //Delete old file
-            Storage::delete('private/exercises/'.$request->file);
+            Storage::delete('private/exercises/'.$exercise->file);
 
             //Upload new file
             $uploadFileName = $request->file('file')->getClientOriginalName();
@@ -109,6 +118,9 @@ class ExerciseController extends Controller
 
     public function delete(Request $request, $id){
         $exercise = Exercise::find($id);
+        if($exercise === null){
+            abort(404);
+        }
         if($request->user()->cannot('access', Exercise::class)){
             abort(404);
         }
@@ -120,6 +132,9 @@ class ExerciseController extends Controller
 
     public function download($id){
         $exercise = Exercise::find($id);
+        if($exercise === 0){
+            abort(404);
+        }
         return Storage::download('private/exercises/'.$exercise->file);
     }
 }
