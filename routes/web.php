@@ -72,9 +72,9 @@ Route::prefix('exercise')->name('exercises.')->group(function(){
 
     Route::post('/add', [ExerciseController::class, 'postAdd'])->name('post-add');
 
-    Route::get('/update/{id?}', [ExerciseController::class, 'getUpdate'])->name('get-update');
+    Route::get('/update/{id}', [ExerciseController::class, 'getUpdate'])->name('get-update');
 
-    Route::post('/update/{id?}', [ExerciseController::class, 'postUpdate'])->name('post-update');
+    Route::post('/update', [ExerciseController::class, 'postUpdate'])->name('post-update');
 
     Route::get('/delete/{id}', [ExerciseController::class, 'delete'])->name('delete');
 
@@ -98,9 +98,9 @@ Route::prefix('quiz')->name('quizzes.')->group(function(){
 
     Route::post('/add', [QuizController::class, 'postAdd'])->name('post-add');
 
-    Route::get('/update/{id?}', [QuizController::class, 'getUpdate'])->name('get-update');
+    Route::get('/update/{id}', [QuizController::class, 'getUpdate'])->name('get-update');
 
-    Route::post('/update/{id?}', [QuizController::class, 'postUpdate'])->name('post-update');
+    Route::post('/update', [QuizController::class, 'postUpdate'])->name('post-update');
 
     Route::get('/delete/{id}', [QuizController::class, 'delete'])->name('delete');
 

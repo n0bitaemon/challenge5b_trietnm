@@ -23,9 +23,7 @@ class QuizPolicy
     }
 
     public function access(User $user){
-        return $user->is_teacher
-            ? Response::allow()
-            : Response::denyAsNotFound();
+        return $user->is_teacher;
     }
 
     public function answer(User $user, Quiz $quiz){
