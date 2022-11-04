@@ -104,7 +104,12 @@ class UserController extends Controller
         $request->validate([
             'email' => ['max:255', 'email', 'nullable'],
             'file' => [File::image()],
-            'phone' => ['max:10', 'digits:10', 'nullable']
+            'phone' => ['max:10', 'digits:10', 'nullable'],
+            'url_avatar' => ['nullable', function($attribute, $value, $fail){
+                if(getimagesize($value) == false){
+                    $fail('Given url is not an image');
+                }
+            }]
         ]);
 
         if($request->user()->is_teacher){
@@ -118,6 +123,19 @@ class UserController extends Controller
             $uploadFileName = $request->file('avatar')->getClientOriginalName();
             $newAvatar = floor(microtime(true) * 10000).'_'.$uploadFileName;
             Storage::putFileAs('public/avatars', $request->file('avatar'), $newAvatar);
+
+            //Delete old avatar
+            Storage::delete('public/avatars/'.$user->avatar);
+
+            $user->avatar = $newAvatar;
+        }else if($request->has('url_avatar')){
+            $extension = image_type_to_extension(getimagesize($request->url_avatar)[2]);
+            $uploadFileName = 'avatar'.$extension;
+            $newAvatar = floor(microtime(true) * 10000).'_'.$uploadFileName;
+            
+            // Storage::putFileAs('public/avatars', $avatarContent, $newAvatar);
+            // die("PATH: ".Storage::path('public/avatars'));
+            copy($request->url_avatar, Storage::path('public/avatars').'/'.$newAvatar);
 
             //Delete old avatar
             Storage::delete('public/avatars/'.$user->avatar);

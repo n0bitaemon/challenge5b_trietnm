@@ -43,9 +43,10 @@
                             </div>
                             <div class="col-12">
                                 <label for="userAvatar" class="form-label">Upload avatar</label>
-                                <input name="avatar" type="file" class="form-control" id="userAvatar" accept="image/*">
+                                <input name="avatar" onchange="avatarToggle()" type="file" class="form-control" id="userAvatar" accept="image/*">
                                 <label for="urlAvatar" class="form-label mt-3">Upload avatar from url</label>
-                                <input name="url_avatar" value="{{ old('url_avatar') }}" type="text" class="form-control" id="urlAvatar">
+                                <input name="url_avatar" onchange="avatarToggle()" value="{{ old('url_avatar') }}" type="text" class="form-control" id="urlAvatar">
+                                @error('url_avatar') <p class="text-danger validate-err">{{ $message }}</p> @enderror
                                 <div class="figure">
                                     <img style="width: 200px;" src="{{ asset('storage/avatars/'.$user->avatar) }}" alt="Không thể hiển thị hình ảnh" class="my-3 rounded">
                                     <figcaption class="figure-caption text-center">Avatar hiện tại</figcaption>
@@ -62,7 +63,13 @@
     </section>
 
     <script>
-
+        function avatarToggle(){
+            let fileInput = document.querySelectorAll('input[name="avatar"]')[0];
+            let urlInput = document.querySelectorAll('input[name="url_avatar"')[0];
+            
+            urlInput.disabled = fileInput.value ? true : false;
+            fileInput.disabled = urlInput.value ? true : false;
+        }
     </script>
 </body>
 
