@@ -22,6 +22,10 @@ use App\Http\Controllers\ExerciseAnswerController;
 |
 */
 
+Route::get('/test', function(){
+    die(phpversion());
+});
+
 Route::get('/', function (Request $request) {
     if($request->user()){
         return redirect()->route('exercises.index');
