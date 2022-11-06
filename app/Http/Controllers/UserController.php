@@ -106,8 +106,12 @@ class UserController extends Controller
             'file' => [File::image()],
             'phone' => ['max:10', 'digits:10', 'nullable'],
             'url_avatar' => ['nullable', function($attribute, $value, $fail){
-                if(getimagesize($value) == false){
-                    $fail('Given url is not an image');
+                try{
+                    if(getimagesize($value) == false){
+                        $fail('URL không phải ình ảnh');
+                    }
+                }catch(Exception $e){
+                    $fail('Lỗi khi xử lý hình ảnh');
                 }
             }]
         ]);
@@ -122,10 +126,10 @@ class UserController extends Controller
             //Upload new avatar
             $uploadFileName = $request->file('avatar')->getClientOriginalName();
             $newAvatar = floor(microtime(true) * 10000).'_'.$uploadFileName;
-            Storage::putFileAs('public/avatars', $request->file('avatar'), $newAvatar);
+            Storage::disk('public_upload')->putFileAs('avatars', $request->file('avatar'), $newAvatar);
 
             //Delete old avatar
-            Storage::delete('public/avatars/'.$user->avatar);
+            Storage::disk('public_upload')->delete('avatars/'.$user->avatar);
 
             $user->avatar = $newAvatar;
         }else if($request->has('url_avatar')){
@@ -133,12 +137,10 @@ class UserController extends Controller
             $uploadFileName = 'avatar'.$extension;
             $newAvatar = floor(microtime(true) * 10000).'_'.$uploadFileName;
             
-            // Storage::putFileAs('public/avatars', $avatarContent, $newAvatar);
-            // die("PATH: ".Storage::path('public/avatars'));
-            copy($request->url_avatar, Storage::path('public/avatars').'/'.$newAvatar);
+            copy($request->url_avatar, public_path('avatars').'/'.$newAvatar);
 
             //Delete old avatar
-            Storage::delete('public/avatars/'.$user->avatar);
+            Storage::disk('public_upload')->delete('avatars/'.$user->avatar);
 
             $user->avatar = $newAvatar;
         }

@@ -16,7 +16,7 @@
                     <div class="row">
                         @if($user->avatar)
                         <div class="col-lg-3 col-sm-12">
-                            <img style="width: 200px;" src="{{ asset('storage/avatars/'.$user->avatar) }}" alt="" class="my-3 rounded">
+                            <img style="width: 200px;" src="{{ asset('avatars/'.$user->avatar) }}" alt="" class="my-3 rounded">
                         </div>
                         @endif
                         <div class="col-lg-9 col-sm-12 pt-5">
@@ -175,7 +175,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger">Xóa</button>
+                    <a href="{{ URL::route('users.delete', ['id'=>$user->id]) }}" type="button" class="btn btn-danger">Xóa</a>
                 </div>
             </div>
         </div>

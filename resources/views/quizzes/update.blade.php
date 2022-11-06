@@ -20,16 +20,16 @@
                         <input name="id" type="hidden" value="{{ $quiz->id }}">
                         <div class="mb-3">
                             <label for="quizTitle" class="form-label">Tên câu đố</label>
-                            <input name="title" type="text" value="title" class="form-control" id="quizTitle">
+                            <input name="{{ old('title', $quiz->title) }}" type="text" value="title" class="form-control" id="quizTitle">
                             @error('title') <p class="text-danger validate-err">{{ $message }}</p> @enderror
                         </div>
                         <div class="mb-3">
                             <label for="quizDesc" class="form-label">Mô tả</label>
-                            <textarea name="description" id="quizDesc" cols="30" rows="5" class="form-control">description</textarea>
+                            <textarea name="description" id="quizDesc" cols="30" rows="5" class="form-control">{{ old('description', $quiz->description) }}</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="quizHint" class="form-label">Gợi ý</label>
-                            <textarea name="hint" id="quizHint" cols="30" rows="5" class="form-control">hint</textarea>
+                            <textarea name="hint" id="quizHint" cols="30" rows="5" class="form-control">{{ old('title', $quiz->title) }}</textarea>
                             @error('hint') <p class="text-danger validate-err">{{ $message }}</p> @enderror
                         </div>
                         <div class="mb-3">

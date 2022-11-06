@@ -82,10 +82,10 @@ class ExerciseAnswerController extends Controller
         return redirect()->route('exercises.detail', ['id'=>$id]);
     }
 
-    public function download(Request $request, $id){
+    public function download(Request $request, $exercise_id, $user_id){
         $answer = ExerciseAnswer::where([
-            ['user_id', '=', $request->user()->id],
-            ['exercise_id', '=', $id]
+            ['user_id', '=', $user_id],
+            ['exercise_id', '=', $exercise_id]
         ])->first(['answer_file']);
         if($answer === null){
             abort(404);

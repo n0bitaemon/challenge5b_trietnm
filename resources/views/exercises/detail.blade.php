@@ -75,7 +75,7 @@
                                         @if($has_answer)
                                         <div class="card mb-2">
                                             <div class="card-body p-0">
-                                            <a class="d-block p-2 text-center" href="{{ URL::route('exercises.answers.download', $exercise->id) }}">{{ $answer->getFileWithoutTimestamp() }}</a>
+                                            <a class="d-block p-2 text-center" href="{{ URL::route('exercises.answers.download', ['exercise_id'=>$exercise->id, 'user_id'=>Request::user()->id]) }}">{{ $answer->getFileWithoutTimestamp() }}</a>
                                             </div>
                                         </div>
                                         @else
@@ -124,7 +124,7 @@
                                 <td><a href="#">{{ $user->fullname }}</td>
                                 <td>Chưa chấm / đã chấm</td>
                                 <td>{{ $answer->answer_time }}</td>
-                                <td><a href="{{ URL::route('exercises.answers.download', ['exercise_id'=>$exercise->id, 'user_id'=>$user->id]) }}" class="btn btn-sm btn-outline-primary">Download</a></td>
+                                <td><a href="{{ URL::route('exercises.answers.download', ['exercise_id'=>$exercise->id, 'user_id'=>$answer->user_id]) }}" class="btn btn-sm btn-outline-primary">Download</a></td>
                             </tr>
                             @endforeach
                         </tbody>

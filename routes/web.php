@@ -89,7 +89,7 @@ Route::prefix('exercise')->name('exercises.')->group(function(){
 
         Route::get('/cancle/{id}', [ExerciseAnswerController::class, 'cancle'])->name('cancle');
 
-        Route::get('/download/{id}', [ExerciseAnswerController::class, 'download'])->name('download');
+        Route::get('/download/{exercise_id}/{user_id}', [ExerciseAnswerController::class, 'download'])->name('download');
     });
 });
 
